@@ -1,14 +1,25 @@
 import pygame
 
 class Player:
-    x = 0
-    y = 0
     speed = 2
     
-    def __init__(self, filename=None):
+    def __init__(self, x=0, y=0, filename=None):
+        self.x = x
+        self.y = y
         filename = filename or 'images/player.png'
         self.surface = pygame.image.load(filename)
     
+    def on_event(self, event):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_w]:
+            self.hero.moveUp()
+        if keys[pygame.K_s]:
+            self.hero.moveDown()
+        if keys[pygame.K_a]:
+            self.hero.moveLeft()
+        if keys[pygame.K_d]:
+            self.hero.moveRight()
+            
     def moveRight(self):
         self.x += self.speed
     
@@ -20,4 +31,3 @@ class Player:
     
     def moveDown(self):
         self.y += self.speed
-    
