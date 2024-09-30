@@ -1,9 +1,10 @@
 import random
 import pygame
 
-class Enemy:
+class Enemy(pygame.sprite.Sprite):
     
     def __init__(self, x=0, y=0, filename=None):
+        super().__init__()
         print(f'init ufo [{y}, {y}]')
         self.x = x
         self.y = y

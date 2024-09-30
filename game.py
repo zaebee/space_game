@@ -19,19 +19,19 @@ class Game:
         self.bg = pygame.image.load('images/kosmos.png')
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         self.hero = player.Player(self.WIDTH // 2, self.HEIGHT - 100)
-        self.enemies = []
+        self.enemies = pygame.sprite.Group()
     
     def spawn_enemies(self):
         for _ in range(5):
             x = random.randrange(0, self.WIDTH)
             y = random.randrange(0, self.HEIGHT // 3)
             ufo = enemy.Enemy(x, y)
-            self.enemies.append(ufo)
+            self.enemies.add(ufo)
         for _ in range(2):
             x = random.randrange(0, self.WIDTH)
             y = random.randrange(0, self.HEIGHT // 3)
             asteroid = enemy.Enemy(x, y, 'images/asteroid.png')
-            self.enemies.append(asteroid)
+            self.enemies.add(asteroid)
     
     def display_fps(self):
         caption = '{} - FPS: {:.2f}'.format(self.CAPTION, self.clock.get_fps())
@@ -47,6 +47,9 @@ class Game:
         self.screen.blit(self.bg, self.bg.get_rect())
         self.screen.blit(
             self.hero.image, (self.hero.x, self.hero.y))
+        for bullet in self.hero.bullets:
+            self.screen.blit(bullet.image, (bullet.x, bullet.y))
+            bullet.update()
         for ufo in self.enemies:
             self.screen.blit(ufo.image, (ufo.x, ufo.y))
             ufo.update()

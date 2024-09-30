@@ -1,18 +1,22 @@
 import pygame
+import weapon
 
-class Player:
+class Player(pygame.sprite.Sprite):
     speed = 10
     
     def __init__(self, x=0, y=0, filename=None):
+        super().__init__()
         self.x = x
         self.y = y
+        self.bullets = pygame.sprite.Group()
         self.image = pygame.image.load(filename or 'images/player.png')
     
     def on_event(self, event):
         pygame.event.pump()
         keys = pygame.key.get_pressed()
         if event.type == pygame.KEYDOWN:
-            pass # TODO: shoot bullet
+            if keys[pygame.K_SPACE]:
+                self.shoot()
         if keys[pygame.K_w]:
             self.moveUp()
         if keys[pygame.K_s]:
@@ -33,3 +37,9 @@ class Player:
     
     def moveDown(self):
         self.y += self.speed
+        
+    def shoot(self):
+        # TODO: spawn laser
+        rect = self.image.get_rect()
+        laser = weapon.Laser(self.x + rect.centerx, self.y - rect.centery)
+        self.bullets.add(laser)
