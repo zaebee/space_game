@@ -59,6 +59,11 @@ class Game:
     def on_execute(self):
         self.spawn_enemies()
         while self.running:
+            hits = pygame.sprite.groupcollide(
+                self.enemies, self.hero.bullets, True, True)
+            for _ in hits:
+                image = random.choice(['images/ufo.png', 'images/asteroid.png'])
+                self.enemies.add(enemy.Enemy(image))
             self.on_render()
             for event in pygame.event.get():
                 self.on_event(event)
