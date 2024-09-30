@@ -1,12 +1,14 @@
+import random
 import pygame
 
 import player
+import enemy
 
 
 class Game:
     CAPTION = 'Easy game'
-    WIDTH = 800
-    HEIGHT = 600
+    WIDTH = 1024
+    HEIGHT = 768
     FPS = 60
     
     def __init__(self):
@@ -16,7 +18,20 @@ class Game:
         self.clock = pygame.time.Clock()
         self.bg = pygame.image.load('images/kosmos.png')
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
-        self.hero = player.Player(400, 400)
+        self.hero = player.Player(self.WIDTH // 2, self.HEIGHT - 100)
+        self.enemies = []
+    
+    def spawn_enemies(self):
+        for _ in range(5):
+            x = random.randrange(0, self.WIDTH)
+            y = random.randrange(0, self.HEIGHT // 3)
+            ufo = enemy.Enemy(x, y)
+            self.enemies.append(ufo)
+        for _ in range(2):
+            x = random.randrange(0, self.WIDTH)
+            y = random.randrange(0, self.HEIGHT // 3)
+            asteroid = enemy.Enemy(x, y, 'images/asteroid.png')
+            self.enemies.append(asteroid)
     
     def display_fps(self):
         caption = '{} - FPS: {:.2f}'.format(self.CAPTION, self.clock.get_fps())
@@ -32,6 +47,9 @@ class Game:
         self.screen.blit(self.bg, self.bg.get_rect())
         self.screen.blit(
             self.hero.image, (self.hero.x, self.hero.y))
+        for ufo in self.enemies:
+            self.screen.blit(ufo.image, (ufo.x, ufo.y))
+            ufo.update()
         self.display_fps()
         self.clock.tick(self.FPS)
         pygame.display.flip()
@@ -40,6 +58,7 @@ class Game:
         pygame.quit()
         
     def on_execute(self):
+        self.spawn_enemies()
         while self.running:
             self.on_render()
             for event in pygame.event.get():
