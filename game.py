@@ -23,14 +23,10 @@ class Game:
     
     def spawn_enemies(self):
         for _ in range(5):
-            x = random.randrange(0, self.WIDTH)
-            y = random.randrange(0, self.HEIGHT // 3)
-            ufo = enemy.Enemy(x, y)
+            ufo = enemy.Enemy()
             self.enemies.add(ufo)
         for _ in range(2):
-            x = random.randrange(0, self.WIDTH)
-            y = random.randrange(0, self.HEIGHT // 3)
-            asteroid = enemy.Enemy(x, y, 'images/asteroid.png')
+            asteroid = enemy.Enemy('images/asteroid.png')
             self.enemies.add(asteroid)
     
     def display_fps(self):
@@ -45,14 +41,14 @@ class Game:
     def on_render(self):
         self.screen.fill((0, 0, 0))
         self.screen.blit(self.bg, self.bg.get_rect())
-        self.screen.blit(
-            self.hero.image, (self.hero.x, self.hero.y))
-        for bullet in self.hero.bullets:
-            self.screen.blit(bullet.image, (bullet.x, bullet.y))
-            bullet.update()
-        for ufo in self.enemies:
-            self.screen.blit(ufo.image, (ufo.x, ufo.y))
-            ufo.update()
+        
+        self.screen.blit(self.hero.image, self.hero.rect)
+        self.hero.bullets.draw(self.screen)
+        self.hero.bullets.update()
+
+        self.enemies.draw(self.screen)
+        self.enemies.update()
+                
         self.display_fps()
         self.clock.tick(self.FPS)
         pygame.display.flip()

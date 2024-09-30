@@ -6,10 +6,11 @@ class Player(pygame.sprite.Sprite):
     
     def __init__(self, x=0, y=0, filename=None):
         super().__init__()
-        self.x = x
-        self.y = y
         self.bullets = pygame.sprite.Group()
         self.image = pygame.image.load(filename or 'images/player.png')
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
     
     def on_event(self, event):
         pygame.event.pump()
@@ -27,19 +28,18 @@ class Player(pygame.sprite.Sprite):
             self.moveRight()
             
     def moveRight(self):
-        self.x += self.speed
+        self.rect.x += self.speed
     
     def moveLeft(self):
-        self.x -= self.speed
+        self.rect.x -= self.speed
     
     def moveUp(self):
-        self.y -= self.speed
+        self.rect.y -= self.speed
     
     def moveDown(self):
-        self.y += self.speed
+        self.rect.y += self.speed
         
     def shoot(self):
         # TODO: spawn laser
-        rect = self.image.get_rect()
-        laser = weapon.Laser(self.x + rect.centerx, self.y - rect.centery)
+        laser = weapon.Laser(self.rect.centerx, self.rect.top)
         self.bullets.add(laser)
